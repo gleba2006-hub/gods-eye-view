@@ -1,10 +1,20 @@
 import * as Cesium from 'cesium';
 
+const HOLON = { lon: 34.7794, lat: 32.0167 };
+
 /**
  * Camera presets for notable locations.
- * Phase 1 default: fly to Austin, TX on load.
+ * Smirnov default: Holon.
  */
 export const CAMERA_PRESETS = {
+  holon: {
+    destination: Cesium.Cartesian3.fromDegrees(HOLON.lon, HOLON.lat, 800),
+    orientation: {
+      heading: Cesium.Math.toRadians(0),
+      pitch: Cesium.Math.toRadians(-35),
+      roll: 0.0,
+    },
+  },
   austin: {
     destination: Cesium.Cartesian3.fromDegrees(-97.7431, 30.2672, 800),
     orientation: {
@@ -47,13 +57,13 @@ export function flyToPreset(viewer, presetName, duration = 3.0) {
 }
 
 /**
- * Set camera to Austin on load with a cinematic fly-in.
+ * Startup fly-in. Name kept so upstream tests still import it.
+ * Destination is Holon, Smirnov base.
  * @returns {Function} Cancels the pending or active startup flight.
  */
 export function flyToAustin(viewer) {
-  // Start from a high altitude, then fly down
   viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(-97.7431, 30.2672, 25000),
+    destination: Cesium.Cartesian3.fromDegrees(HOLON.lon, HOLON.lat, 25000),
     orientation: {
       heading: Cesium.Math.toRadians(0),
       pitch: Cesium.Math.toRadians(-90),
@@ -65,7 +75,7 @@ export function flyToAustin(viewer) {
   const timer = setTimeout(() => {
     if (viewer.isDestroyed()) return;
     viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(-97.7431, 30.2672, 600),
+      destination: Cesium.Cartesian3.fromDegrees(HOLON.lon, HOLON.lat, 600),
       orientation: {
         heading: Cesium.Math.toRadians(15),
         pitch: Cesium.Math.toRadians(-30),
